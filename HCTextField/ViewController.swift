@@ -36,6 +36,8 @@ class ViewController: UIViewController, HCTextFieldDelegate {
     // MARK: - Actions
 
     @IBAction func loginButtonTapped() {
+        _ = passwordField.resignFirstResponder()
+
         var title = ""
         var message: String?
 
