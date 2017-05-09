@@ -43,18 +43,11 @@ public struct HCTextFieldCheckType: OptionSet {
 
 open class HCTextField: UITextField {
 
-    open static var allChecksPassed: Bool {
-        for (_, value) in checkResults where value == false {
-            return false
-        }
-        return true
-    }
-    private static var checkResults = [HCTextField: Bool]()
-
     open var checkType: HCTextFieldCheckType = .notEmpty
     open var errorMessage: String?
     open var minLength: Int = kMinLength
     open var maxLength: Int = kMaxLength
+    open var passedCheck: Bool = false
     weak open var textFieldDelegate: HCTextFieldDelegate?
 
     // MARK: - Initializers & setup data
@@ -97,14 +90,6 @@ open class HCTextField: UITextField {
         self.maxLength = maxLength
     }
 
-    // MARK: - Public API
-
-    open static func resignFirstResponder() {
-        for (textField, _) in checkResults {
-            _ = textField.resignFirstResponder()
-        }
-    }
-
     // MARK: - Override methods
 
     open override func becomeFirstResponder() -> Bool {
@@ -116,27 +101,27 @@ open class HCTextField: UITextField {
 
         if checkType.contains(.email) && !isEmail(text) {
 
-            HCTextField.checkResults[self] = false
+            passedCheck = false
             setBorder(for: .error)
-            textFieldDelegate?.textField(self, didCheckFor: .email, errorMessage: errorMessage, success: false)
+            textFieldDelegate?.textField(self, didCheckFor: .email, isSuccess: false, errorMessage: errorMessage)
 
         } else if checkType.contains(.length) && !satisfiesLengthRequirement(text) {
 
-            HCTextField.checkResults[self] = false
+            passedCheck = false
             setBorder(for: .error)
-            textFieldDelegate?.textField(self, didCheckFor: .length, errorMessage: errorMessage, success: false)
+            textFieldDelegate?.textField(self, didCheckFor: .length, isSuccess: false, errorMessage: errorMessage)
 
         } else if checkType.contains(.notEmpty) && isEmpty(text) {
 
-            HCTextField.checkResults[self] = false
+            passedCheck = false
             setBorder(for: .error)
-            textFieldDelegate?.textField(self, didCheckFor: .notEmpty, errorMessage: errorMessage, success: false)
+            textFieldDelegate?.textField(self, didCheckFor: .notEmpty, isSuccess: false, errorMessage: errorMessage)
 
         } else {
 
-            HCTextField.checkResults[self] = true
+            passedCheck = true
             setBorder(for: .normal)
-            textFieldDelegate?.textField(self, didCheckFor: .none, errorMessage: nil, success: true)
+            textFieldDelegate?.textField(self, didCheckFor: .none, isSuccess: true, errorMessage: nil)
         }
 
         return super.resignFirstResponder()
@@ -186,7 +171,7 @@ public protocol HCTextFieldDelegate: UITextFieldDelegate {
     // Objective-C doesn't support OptionSet
     func textField(_ textField: HCTextField,
                    didCheckFor type: HCTextFieldCheckType,
-                   errorMessage: String?,
-                   success: Bool)
+                   isSuccess: Bool,
+                   errorMessage: String? )
 
 }

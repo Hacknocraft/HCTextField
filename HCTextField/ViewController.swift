@@ -36,12 +36,10 @@ class ViewController: UIViewController, HCTextFieldDelegate {
     // MARK: - Actions
 
     @IBAction func loginButtonTapped() {
-        HCTextField.resignFirstResponder()
-
         var title = ""
         var message: String?
 
-        if HCTextField.allChecksPassed {
+        if nameField.passedCheck && emailField.passedCheck && passwordField.passedCheck {
             title = "Login Successfully"
             message = nil
         } else {
@@ -62,10 +60,11 @@ class ViewController: UIViewController, HCTextFieldDelegate {
 
     func textField(_ textField: HCTextField,
                    didCheckFor type: HCTextFieldCheckType,
-                   errorMessage: String?,
-                   success: Bool) {
+                   isSuccess: Bool,
+                   errorMessage: String?
+                   ) {
 
-        if success {
+        if isSuccess {
             setRightView(for: textField, type: .none, errorMessage: nil)
 
         } else {
