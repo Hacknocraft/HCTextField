@@ -544,6 +544,7 @@
 				AF05C7781EBB84E900445803 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AF05C7791EBB84E900445803 /* Build configuration list for PBXNativeTarget "HCTextFieldTests" */ = {
 			isa = XCConfigurationList;
@@ -552,6 +553,7 @@
 				AF05C77B1EBB84E900445803 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AF05C77C1EBB84E900445803 /* Build configuration list for PBXNativeTarget "HCTextFieldUITests" */ = {
 			isa = XCConfigurationList;
@@ -560,6 +562,7 @@
 				AF05C77E1EBB84E900445803 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
