@@ -17,7 +17,9 @@ open class HCTextFieldManager: NSObject {
     private var textFields = [HCTextField]()
 
     open func addTextFields(_ textFields: [HCTextField]) {
-        self.textFields.append(contentsOf: textFields)
+        for field in textFields where !self.textFields.contains(field) {
+            self.textFields.append(field)
+        }
     }
 
     // MARK: - Private implementations
