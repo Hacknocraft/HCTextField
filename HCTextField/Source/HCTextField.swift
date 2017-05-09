@@ -32,22 +32,29 @@ public struct HCTextFieldCheckType: OptionSet {
     }
 
     /// don't perform any check
-    static let none = HCTextFieldCheckType(rawValue: 1 << 0)
+    public static let none = HCTextFieldCheckType(rawValue: 1 << 0)
     /// check if input is valid email
-    static let email = HCTextFieldCheckType(rawValue: 1 << 1)
+    public static let email = HCTextFieldCheckType(rawValue: 1 << 1)
     /// check content length
-    static let length = HCTextFieldCheckType(rawValue: 1 << 2)
+    public static let length = HCTextFieldCheckType(rawValue: 1 << 2)
     /// check if a put was missing
-    static let empty = HCTextFieldCheckType(rawValue: 1 << 3)
+    public static let notEmpty = HCTextFieldCheckType(rawValue: 1 << 3)
 }
 
 open class HCTextField: UITextField {
 
-    open var checkType: HCTextFieldCheckType = .empty
+    open static var allChecksPassed: Bool {
+        for (_, value) in checkResults where value == false {
+            return false
+        }
+        return true
+    }
+    private static var checkResults = [HCTextField: Bool]()
+
+    open var checkType: HCTextFieldCheckType = .notEmpty
     open var errorMessage: String?
     open var minLength: Int = kMinLength
     open var maxLength: Int = kMaxLength
-    open var passedCheck: Bool = false
     weak open var textFieldDelegate: HCTextFieldDelegate?
 
     // MARK: - Initializers & setup data
@@ -90,6 +97,14 @@ open class HCTextField: UITextField {
         self.maxLength = maxLength
     }
 
+    // MARK: - Public API
+
+    open static func resignFirstResponder() {
+        for (textField, _) in checkResults {
+            _ = textField.resignFirstResponder()
+        }
+    }
+
     // MARK: - Override methods
 
     open override func becomeFirstResponder() -> Bool {
@@ -101,27 +116,27 @@ open class HCTextField: UITextField {
 
         if checkType.contains(.email) && !isEmail(text) {
 
-            passedCheck = false
+            HCTextField.checkResults[self] = false
             setBorder(for: .error)
-            textFieldDelegate?.textField(self, didCheckFor: .email, errorMessage: errorMessage)
+            textFieldDelegate?.textField(self, didCheckFor: .email, errorMessage: errorMessage, success: false)
 
         } else if checkType.contains(.length) && !satisfiesLengthRequirement(text) {
 
-            passedCheck = false
+            HCTextField.checkResults[self] = false
             setBorder(for: .error)
-            textFieldDelegate?.textField(self, didCheckFor: .length, errorMessage: errorMessage)
+            textFieldDelegate?.textField(self, didCheckFor: .length, errorMessage: errorMessage, success: false)
 
-        } else if checkType.contains(.empty) && isEmpty(text) {
+        } else if checkType.contains(.notEmpty) && isEmpty(text) {
 
-            passedCheck = false
+            HCTextField.checkResults[self] = false
             setBorder(for: .error)
-            textFieldDelegate?.textField(self, didCheckFor: .empty, errorMessage: errorMessage)
+            textFieldDelegate?.textField(self, didCheckFor: .notEmpty, errorMessage: errorMessage, success: false)
 
         } else {
 
-            passedCheck = true
+            HCTextField.checkResults[self] = true
             setBorder(for: .normal)
-            textFieldDelegate?.textField(self, didCheckFor: .none, errorMessage: nil)
+            textFieldDelegate?.textField(self, didCheckFor: .none, errorMessage: nil, success: true)
         }
 
         return super.resignFirstResponder()
@@ -150,17 +165,16 @@ open class HCTextField: UITextField {
 
     private func setBorder(for type: HCTextFieldType) {
         layer.cornerRadius = 3
+        layer.borderWidth = 1
+
         switch type {
         case .normal:
-            layer.borderWidth = 1
             layer.borderColor = HCTextFieldBorderColor.normal.cgColor
 
         case .highlighted:
-            layer.borderWidth = 1
             layer.borderColor = HCTextFieldBorderColor.highlighted.cgColor
 
         case .error:
-            layer.borderWidth = 1
             layer.borderColor = HCTextFieldBorderColor.error.cgColor
         }
     }
@@ -169,7 +183,10 @@ open class HCTextField: UITextField {
 // MARK: - HCTextFieldDelegate
 public protocol HCTextFieldDelegate: UITextFieldDelegate {
 
-    // Obejctive-C don's support OptionSet
-    func textField(_ textField: HCTextField, didCheckFor type: HCTextFieldCheckType, errorMessage: String?)
+    // Objective-C doesn't support OptionSet
+    func textField(_ textField: HCTextField,
+                   didCheckFor type: HCTextFieldCheckType,
+                   errorMessage: String?,
+                   success: Bool)
 
 }

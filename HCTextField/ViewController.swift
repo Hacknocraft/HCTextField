@@ -17,10 +17,10 @@ class ViewController: UIViewController, HCTextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        nameField.setCheckType(.empty, errorMessage: "cann't be empty")
+        nameField.setCheckType(.notEmpty, errorMessage: "cann't be empty")
         nameField.textFieldDelegate = self
 
-        emailField.setCheckType(.email, errorMessage: "not a valid email")
+        emailField.setCheckType([.email, .notEmpty], errorMessage: "not a valid email")
         emailField.textFieldDelegate = self
 
         passwordField.setCheckType(.length, errorMessage: "6 ~ 20 characters", minLength: 6, maxLength: 20)
@@ -36,12 +36,12 @@ class ViewController: UIViewController, HCTextFieldDelegate {
     // MARK: - Actions
 
     @IBAction func loginButtonTapped() {
-        _ = passwordField.resignFirstResponder()
+        HCTextField.resignFirstResponder()
 
         var title = ""
         var message: String?
 
-        if nameField.passedCheck && emailField.passedCheck && passwordField.passedCheck {
+        if HCTextField.allChecksPassed {
             title = "Login Successfully"
             message = nil
         } else {
@@ -60,23 +60,29 @@ class ViewController: UIViewController, HCTextFieldDelegate {
 
     // MARK: - HCTextFieldDelegate
 
-    func textField(_ textField: HCTextField, didCheckFor type: HCTextFieldCheckType, errorMessage: String?) {
+    func textField(_ textField: HCTextField,
+                   didCheckFor type: HCTextFieldCheckType,
+                   errorMessage: String?,
+                   success: Bool) {
 
-        switch type {
-        case HCTextFieldCheckType.email:
-            setRightView(for: textField, type: .email, errorMessage: errorMessage)
+        if success {
+            setRightView(for: textField, type: .none, errorMessage: nil)
 
-        case HCTextFieldCheckType.empty:
-            setRightView(for: textField, type: .empty, errorMessage: errorMessage)
+        } else {
 
-        case HCTextFieldCheckType.length:
-            setRightView(for: textField, type: .length, errorMessage: errorMessage)
+            switch type {
+            case HCTextFieldCheckType.email:
+                setRightView(for: textField, type: .email, errorMessage: errorMessage)
 
-        case HCTextFieldCheckType.none:
-            setRightView(for: textField, type: .none, errorMessage: errorMessage)
+            case HCTextFieldCheckType.notEmpty:
+                setRightView(for: textField, type: .notEmpty, errorMessage: errorMessage)
 
-        default:
-            break
+            case HCTextFieldCheckType.length:
+                setRightView(for: textField, type: .length, errorMessage: errorMessage)
+
+            default:
+                break
+            }
         }
     }
 
