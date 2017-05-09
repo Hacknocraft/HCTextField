@@ -26,6 +26,7 @@ class ViewController: UIViewController, HCTextFieldDelegate {
         passwordField.setCheckType(.length, errorMessage: "6 ~ 20 characters", minLength: 6, maxLength: 20)
         passwordField.textFieldDelegate = self
 
+        HCTextFieldManager.shared.addTextFields([nameField, emailField, passwordField])
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,12 +37,10 @@ class ViewController: UIViewController, HCTextFieldDelegate {
     // MARK: - Actions
 
     @IBAction func loginButtonTapped() {
-        _ = passwordField.resignFirstResponder()
-
         var title = ""
         var message: String?
 
-        if nameField.passedCheck && emailField.passedCheck && passwordField.passedCheck {
+        if HCTextFieldManager.shared.allTextFieldsPassedCheck {
             title = "Login Successfully"
             message = nil
         } else {
