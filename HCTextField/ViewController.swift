@@ -14,6 +14,8 @@ class ViewController: UIViewController, HCTextFieldDelegate {
     @IBOutlet weak var emailField: HCTextField!
     @IBOutlet weak var passwordField: HCTextField!
 
+    var textFieldManager: HCTextFieldManager?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,7 +28,8 @@ class ViewController: UIViewController, HCTextFieldDelegate {
         passwordField.setCheckType(.length, errorMessage: "6 ~ 20 characters", minLength: 6, maxLength: 20)
         passwordField.textFieldDelegate = self
 
-        HCTextFieldManager.shared.addTextFields([nameField, emailField, passwordField])
+        textFieldManager = HCTextFieldManager(textFields: [nameField, emailField, passwordField])
+        textFieldManager?.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -40,7 +43,7 @@ class ViewController: UIViewController, HCTextFieldDelegate {
         var title = ""
         var message: String?
 
-        if HCTextFieldManager.shared.allTextFieldsPassedCheck {
+        if let manager = textFieldManager, manager.isAllTextFieldsPassedCheck() {
             title = "Login Successfully"
             message = nil
         } else {
@@ -113,4 +116,11 @@ class ViewController: UIViewController, HCTextFieldDelegate {
         textField.rightView = label
     }
 
+}
+
+extension ViewController: HCTextFieldManagerDelegate {
+
+    func textFieldManager(_ manager: HCTextFieldManager, lastTextFieldDidPressReturnKey textField: HCTextField) {
+        loginButtonTapped()
+    }
 }
