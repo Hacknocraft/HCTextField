@@ -15,6 +15,8 @@
 		AF05C7671EBB84E900445803 /* HCTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF05C7661EBB84E900445803 /* HCTextFieldTests.swift */; };
 		AF05C7721EBB84E900445803 /* HCTextFieldUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF05C7711EBB84E900445803 /* HCTextFieldUITests.swift */; };
 		AF05C7821EBB855B00445803 /* HCTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF05C7811EBB855B00445803 /* HCTextField.swift */; };
+		FD16C5731EC1BF9200297032 /* HCTextFieldManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD16C5721EC1BF9200297032 /* HCTextFieldManager.swift */; };
+		FD16C5AF1EC2001E00297032 /* HCTextFieldExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD16C5AE1EC2001E00297032 /* HCTextFieldExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		AF05C7711EBB84E900445803 /* HCTextFieldUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCTextFieldUITests.swift; sourceTree = "<group>"; };
 		AF05C7731EBB84E900445803 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AF05C7811EBB855B00445803 /* HCTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTextField.swift; sourceTree = "<group>"; };
+		FD16C5721EC1BF9200297032 /* HCTextFieldManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTextFieldManager.swift; sourceTree = "<group>"; };
+		FD16C5AE1EC2001E00297032 /* HCTextFieldExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTextFieldExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				AF05C7661EBB84E900445803 /* HCTextFieldTests.swift */,
+				FD16C5AE1EC2001E00297032 /* HCTextFieldExtensions.swift */,
 				AF05C7681EBB84E900445803 /* Info.plist */,
 			);
 			path = HCTextFieldTests;
@@ -132,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				AF05C7811EBB855B00445803 /* HCTextField.swift */,
+				FD16C5721EC1BF9200297032 /* HCTextFieldManager.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -293,6 +299,7 @@
 			files = (
 				AF05C7821EBB855B00445803 /* HCTextField.swift in Sources */,
 				AF05C7541EBB84E900445803 /* ViewController.swift in Sources */,
+				FD16C5731EC1BF9200297032 /* HCTextFieldManager.swift in Sources */,
 				AF05C7521EBB84E900445803 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -301,6 +308,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD16C5AF1EC2001E00297032 /* HCTextFieldExtensions.swift in Sources */,
 				AF05C7671EBB84E900445803 /* HCTextFieldTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
