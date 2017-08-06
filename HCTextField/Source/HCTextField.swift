@@ -66,15 +66,6 @@ open class HCTextField: UITextField {
                maxLength: maxLength)
     }
 
-    public init(frame: CGRect,
-                checkType: HCTextFieldCheckType,
-                errorMessage: String?,
-                placeholder: String?) {
-        super.init(frame: frame)
-
-        config(checkType: checkType, errorMessage: errorMessage, placeholder: placeholder)
-    }
-
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setBorder(for: .normal)

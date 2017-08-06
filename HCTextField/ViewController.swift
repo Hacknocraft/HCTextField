@@ -19,13 +19,21 @@ class ViewController: UIViewController, HCTextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        nameField.setCheckType(.notEmpty, errorMessage: "cann't be empty")
+        nameField.config(checkType: .notEmpty,
+                         errorMessage: "cann't be empty",
+                         placeholder: "Full name")
         nameField.textFieldDelegate = self
 
-        emailField.setCheckType([.email, .notEmpty], errorMessage: "not a valid email")
+        emailField.config(checkType: [.email, .notEmpty],
+                         errorMessage: "cann't be empty",
+                         placeholder: "Email")
         emailField.textFieldDelegate = self
 
-        passwordField.setCheckType(.length, errorMessage: "6 ~ 20 characters", minLength: 6, maxLength: 20)
+        passwordField.config(checkType: .length,
+                             errorMessage: "6 ~ 20 characters",
+                             placeholder: "Password",
+                             minLength: 6,
+                             maxLength: 20)
         passwordField.textFieldDelegate = self
 
         textFieldManager = HCTextFieldManager(textFields: [nameField, emailField, passwordField])
@@ -65,8 +73,7 @@ class ViewController: UIViewController, HCTextFieldDelegate {
     func textField(_ textField: HCTextField,
                    didCheckFor type: HCTextFieldCheckType,
                    isSuccess: Bool,
-                   errorMessage: String?
-                   ) {
+                   errorMessage: String?) {
 
         if isSuccess {
             setRightView(for: textField, type: .none, errorMessage: nil)
