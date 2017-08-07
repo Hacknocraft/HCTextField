@@ -19,19 +19,24 @@ class ViewController: UIViewController, HCTextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let checkmark = UIImage(named: "checkmark")
+
         nameField.config(checkType: .notEmpty,
                          errorMessage: "cann't be empty",
-                         placeholder: "Full name")
+                         placeholder: "Full name",
+                         checkmark: checkmark)
         nameField.textFieldDelegate = self
 
         emailField.config(checkType: [.email, .notEmpty],
-                         errorMessage: "cann't be empty",
-                         placeholder: "Email")
+                         errorMessage: "not a valid email",
+                         placeholder: "Email",
+                         checkmark: checkmark)
         emailField.textFieldDelegate = self
 
         passwordField.config(checkType: .length,
                              errorMessage: "6 ~ 20 characters",
                              placeholder: "Password",
+                             checkmark: checkmark,
                              minLength: 6,
                              maxLength: 20)
         passwordField.textFieldDelegate = self

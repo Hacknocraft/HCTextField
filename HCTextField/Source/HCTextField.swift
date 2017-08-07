@@ -48,7 +48,10 @@ open class HCTextField: UITextField {
     open var minLength: Int = kMinLength
     open var maxLength: Int = kMaxLength
     open var passedCheck: Bool = false
+    open var checkmark: UIImage?
     weak open var textFieldDelegate: HCTextFieldDelegate?
+
+    private var rightContainerView: UIView?
 
     // MARK: - Initializers & setup data
 
@@ -56,12 +59,14 @@ open class HCTextField: UITextField {
                 checkType: HCTextFieldCheckType,
                 errorMessage: String?,
                 placeholder: String?,
+                checkmark: UIImage?,
                 minLength: Int? = nil,
                 maxLength: Int? = nil) {
         super.init(frame: frame)
         config(checkType: checkType,
                errorMessage: errorMessage,
                placeholder: placeholder,
+               checkmark: checkmark,
                minLength: minLength,
                maxLength: maxLength)
     }
@@ -74,10 +79,12 @@ open class HCTextField: UITextField {
     open func config(checkType: HCTextFieldCheckType,
                      errorMessage: String?,
                      placeholder: String?,
+                     checkmark: UIImage?,
                      minLength: Int? = nil,
                      maxLength: Int? = nil) {
 
         self.placeholder = placeholder
+        self.checkmark = checkmark
         self.checkType = checkType
         self.errorMessage = errorMessage
         self.setBorder(for: .normal)
@@ -89,6 +96,10 @@ open class HCTextField: UITextField {
 
     open override func becomeFirstResponder() -> Bool {
         setBorder(for: .highlighted)
+
+        passedCheck = false
+        removeCheckmark()
+
         return super.becomeFirstResponder()
     }
 
@@ -117,6 +128,7 @@ open class HCTextField: UITextField {
             passedCheck = true
             setBorder(for: .normal)
             textFieldDelegate?.textField(self, didCheckFor: .none, isSuccess: true, errorMessage: nil)
+            addCheckmark()
         }
 
         return super.resignFirstResponder()
@@ -156,6 +168,42 @@ open class HCTextField: UITextField {
 
         case .error:
             layer.borderColor = HCTextFieldBorderColor.error.cgColor
+        }
+    }
+
+    private func addCheckmark() {
+        guard let checkmark = self.checkmark else {
+            return
+        }
+
+        rightViewMode = .unlessEditing
+
+        guard self.rightContainerView == nil else {
+            rightView = self.rightContainerView
+            return
+        }
+
+        let dividerWidth: CGFloat = 5
+        let imageViewWH = frame.size.height * 0.8
+        let containerViewWidth = imageViewWH + dividerWidth
+
+        let rightContainerView = UIView(frame: CGRect(x: 0, y: 0, width: containerViewWidth, height: imageViewWH))
+
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: imageViewWH, height: imageViewWH))
+        imageView.image = checkmark
+        rightContainerView.addSubview(imageView)
+
+        let divider = UIView(frame: CGRect(x: imageViewWH, y: 0, width: dividerWidth, height: imageViewWH))
+        rightContainerView.addSubview(divider)
+
+        self.rightContainerView = rightContainerView
+        rightView = rightContainerView
+    }
+
+    private func removeCheckmark() {
+        if rightContainerView != nil {
+            rightView = nil
+            rightContainerView = nil
         }
     }
 }
