@@ -17,6 +17,7 @@
 		AF05C7821EBB855B00445803 /* HCTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF05C7811EBB855B00445803 /* HCTextField.swift */; };
 		FD16C5731EC1BF9200297032 /* HCTextFieldManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD16C5721EC1BF9200297032 /* HCTextFieldManager.swift */; };
 		FD16C5AF1EC2001E00297032 /* HCTextFieldExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD16C5AE1EC2001E00297032 /* HCTextFieldExtensions.swift */; };
+		FDB50C8C1F3809F200DC0F68 /* HCImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FDB50C8B1F3809F200DC0F68 /* HCImages.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		AF05C7811EBB855B00445803 /* HCTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTextField.swift; sourceTree = "<group>"; };
 		FD16C5721EC1BF9200297032 /* HCTextFieldManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTextFieldManager.swift; sourceTree = "<group>"; };
 		FD16C5AE1EC2001E00297032 /* HCTextFieldExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCTextFieldExtensions.swift; sourceTree = "<group>"; };
+		FDB50C8B1F3809F200DC0F68 /* HCImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = HCImages.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +140,7 @@
 			children = (
 				AF05C7811EBB855B00445803 /* HCTextField.swift */,
 				FD16C5721EC1BF9200297032 /* HCTextFieldManager.swift */,
+				FDB50C8B1F3809F200DC0F68 /* HCImages.xcassets */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 			files = (
 				AF05C75C1EBB84E900445803 /* LaunchScreen.storyboard in Resources */,
 				AF05C7591EBB84E900445803 /* Assets.xcassets in Resources */,
+				FDB50C8C1F3809F200DC0F68 /* HCImages.xcassets in Resources */,
 				AF05C7571EBB84E900445803 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

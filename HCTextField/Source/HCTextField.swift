@@ -50,6 +50,8 @@ open class HCTextField: UITextField {
     open var passedCheck: Bool = false
     weak open var textFieldDelegate: HCTextFieldDelegate?
 
+    private var rightContainerView: UIView?
+
     // MARK: - Initializers & setup data
 
     public init(frame: CGRect,
@@ -94,6 +96,10 @@ open class HCTextField: UITextField {
 
     open override func becomeFirstResponder() -> Bool {
         setBorder(for: .highlighted)
+
+        passedCheck = false
+        removeCheckmark()
+
         return super.becomeFirstResponder()
     }
 
@@ -122,6 +128,7 @@ open class HCTextField: UITextField {
             passedCheck = true
             setBorder(for: .normal)
             textFieldDelegate?.textField(self, didCheckFor: .none, isSuccess: true, errorMessage: nil)
+            addCheckmark()
         }
 
         return super.resignFirstResponder()
@@ -161,6 +168,38 @@ open class HCTextField: UITextField {
 
         case .error:
             layer.borderColor = HCTextFieldBorderColor.error.cgColor
+        }
+    }
+
+    private func addCheckmark() {
+        rightViewMode = .unlessEditing
+
+        guard self.rightContainerView == nil else {
+            rightView = self.rightContainerView
+            return
+        }
+
+        let dividerWidth: CGFloat = 5
+        let imageViewWH = frame.size.height * 0.8
+        let containerViewWidth = imageViewWH + dividerWidth
+
+        let rightContainerView = UIView(frame: CGRect(x: 0, y: 0, width: containerViewWidth, height: imageViewWH))
+
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: imageViewWH, height: imageViewWH))
+        imageView.image = UIImage(named: "checkmark")
+        rightContainerView.addSubview(imageView)
+
+        let divider = UIView(frame: CGRect(x: imageViewWH, y: 0, width: dividerWidth, height: imageViewWH))
+        rightContainerView.addSubview(divider)
+
+        self.rightContainerView = rightContainerView
+        rightView = rightContainerView
+    }
+
+    private func removeCheckmark() {
+        if rightContainerView != nil {
+            rightView = nil
+            rightContainerView = nil
         }
     }
 }
