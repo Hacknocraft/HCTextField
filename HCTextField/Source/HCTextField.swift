@@ -9,8 +9,8 @@
 import UIKit
 import Foundation
 
-private let kMinLength = 8
-private let kMaxLength = 16
+private let kMinLength = 4
+private let kMaxLength = 50
 
 private enum HCTextFieldType {
     case normal
@@ -55,39 +55,34 @@ open class HCTextField: UITextField {
     public init(frame: CGRect,
                 checkType: HCTextFieldCheckType,
                 errorMessage: String?,
-                minLength: Int,
-                maxLength: Int,
-                placeholder: String?) {
-        self.checkType = checkType
-        self.errorMessage = errorMessage
-        self.minLength = minLength
-        self.maxLength = maxLength
+                placeholder: String?,
+                minLength: Int? = nil,
+                maxLength: Int? = nil) {
         super.init(frame: frame)
-        self.placeholder = placeholder
-    }
-
-    public init(frame: CGRect,
-                checkType: HCTextFieldCheckType,
-                errorMessage: String?,
-                placeholder: String?) {
-        self.checkType = checkType
-        self.errorMessage = errorMessage
-        super.init(frame: frame)
-        self.placeholder = placeholder
+        config(checkType: checkType,
+               errorMessage: errorMessage,
+               placeholder: placeholder,
+               minLength: minLength,
+               maxLength: maxLength)
     }
 
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        self.setBorder(for: .normal)
     }
 
-    open func setCheckType(_ checkType: HCTextFieldCheckType,
-                           errorMessage: String?,
-                           minLength: Int = kMinLength,
-                           maxLength: Int = kMaxLength) {
+    open func config(checkType: HCTextFieldCheckType,
+                     errorMessage: String?,
+                     placeholder: String?,
+                     minLength: Int? = nil,
+                     maxLength: Int? = nil) {
+
+        self.placeholder = placeholder
         self.checkType = checkType
         self.errorMessage = errorMessage
-        self.minLength = minLength
-        self.maxLength = maxLength
+        self.setBorder(for: .normal)
+        self.minLength = minLength ?? kMinLength
+        self.maxLength = maxLength ?? kMaxLength
     }
 
     // MARK: - Override methods
