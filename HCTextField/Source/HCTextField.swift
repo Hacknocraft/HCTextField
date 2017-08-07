@@ -48,6 +48,7 @@ open class HCTextField: UITextField {
     open var minLength: Int = kMinLength
     open var maxLength: Int = kMaxLength
     open var passedCheck: Bool = false
+    open var checkmark: UIImage?
     weak open var textFieldDelegate: HCTextFieldDelegate?
 
     private var rightContainerView: UIView?
@@ -58,12 +59,14 @@ open class HCTextField: UITextField {
                 checkType: HCTextFieldCheckType,
                 errorMessage: String?,
                 placeholder: String?,
+                checkmark: UIImage?,
                 minLength: Int? = nil,
                 maxLength: Int? = nil) {
         super.init(frame: frame)
         config(checkType: checkType,
                errorMessage: errorMessage,
                placeholder: placeholder,
+               checkmark: checkmark,
                minLength: minLength,
                maxLength: maxLength)
     }
@@ -76,10 +79,12 @@ open class HCTextField: UITextField {
     open func config(checkType: HCTextFieldCheckType,
                      errorMessage: String?,
                      placeholder: String?,
+                     checkmark: UIImage?,
                      minLength: Int? = nil,
                      maxLength: Int? = nil) {
 
         self.placeholder = placeholder
+        self.checkmark = checkmark
         self.checkType = checkType
         self.errorMessage = errorMessage
         self.setBorder(for: .normal)
@@ -167,6 +172,10 @@ open class HCTextField: UITextField {
     }
 
     private func addCheckmark() {
+        guard let checkmark = self.checkmark else {
+            return
+        }
+
         rightViewMode = .unlessEditing
 
         guard self.rightContainerView == nil else {
@@ -181,7 +190,7 @@ open class HCTextField: UITextField {
         let rightContainerView = UIView(frame: CGRect(x: 0, y: 0, width: containerViewWidth, height: imageViewWH))
 
         let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: imageViewWH, height: imageViewWH))
-        imageView.image = UIImage(named: "checkmark")
+        imageView.image = checkmark
         rightContainerView.addSubview(imageView)
 
         let divider = UIView(frame: CGRect(x: imageViewWH, y: 0, width: dividerWidth, height: imageViewWH))
