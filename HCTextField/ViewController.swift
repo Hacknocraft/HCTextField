@@ -19,24 +19,7 @@ class ViewController: UIViewController, HCTextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let checkmark = UIImage(named: "checkmark")
-
-        nameField.config(checkType: .notEmpty,
-                         placeholder: "Full name",
-                         checkmark: checkmark)
-        nameField.textFieldDelegate = self
-
-        emailField.config(checkType: [.email, .notEmpty],
-                         placeholder: "Email",
-                         checkmark: checkmark)
-        emailField.textFieldDelegate = self
-
-        passwordField.config(checkType: .length,
-                             placeholder: "Password",
-                             checkmark: checkmark,
-                             minLength: 6,
-                             maxLength: 20)
-        passwordField.textFieldDelegate = self
+        configTextFields()
 
         textFieldManager = HCTextFieldManager(textFields: [nameField, emailField, passwordField])
         textFieldManager?.delegate = self
@@ -45,6 +28,30 @@ class ViewController: UIViewController, HCTextFieldDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    // MARK: - Private implementations
+
+    private func configTextFields() {
+        let checkmark = UIImage(named: "checkmark")
+
+        nameField.config(checkType: [.notEmpty, .noSpecialChar],
+                         placeholder: "Full name",
+                         specialChars: ["/", "&", "*", "$"],
+                         checkmark: checkmark)
+        nameField.textFieldDelegate = self
+
+        emailField.config(checkType: [.email, .notEmpty],
+                          placeholder: "Email",
+                          checkmark: checkmark)
+        emailField.textFieldDelegate = self
+
+        passwordField.config(checkType: .length,
+                             placeholder: "Password",
+                             checkmark: checkmark,
+                             minLength: 6,
+                             maxLength: 20)
+        passwordField.textFieldDelegate = self
     }
 
     // MARK: - Actions
@@ -92,6 +99,8 @@ class ViewController: UIViewController, HCTextFieldDelegate {
             case HCTextFieldCheckType.length:
                 errorMessage = "6~20 characters"
 
+            case HCTextFieldCheckType.noSpecialChar:
+                errorMessage = "Cann't contains \"/ & * $\""
             default:
                 break
             }
@@ -99,8 +108,6 @@ class ViewController: UIViewController, HCTextFieldDelegate {
             textField.showErrorMessageOnRightView(errorMessage)
         }
     }
-
-    // MARK: - Private implementations
 
 }
 

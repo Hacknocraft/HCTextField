@@ -37,8 +37,10 @@ public struct HCTextFieldCheckType: OptionSet {
     public static let email = HCTextFieldCheckType(rawValue: 1 << 1)
     /// check content length
     public static let length = HCTextFieldCheckType(rawValue: 1 << 2)
-    /// check if a put was missing
+    /// check if input was missing
     public static let notEmpty = HCTextFieldCheckType(rawValue: 1 << 3)
+    /// check if input contains special chars, you need to specify the chars when you init HCTextField
+    public static let noSpecialChar = HCTextFieldCheckType(rawValue: 1 << 4)
 }
 
 open class HCTextField: UITextField {
@@ -48,6 +50,7 @@ open class HCTextField: UITextField {
     open var maxLength: Int = kMaxLength
     open var passedCheck: Bool = false
     open var checkmark: UIImage?
+    open var specialChars: [Character]?
     weak open var textFieldDelegate: HCTextFieldDelegate?
 
     private var rightContainerView: UIView?
@@ -57,12 +60,14 @@ open class HCTextField: UITextField {
     public init(frame: CGRect,
                 checkType: HCTextFieldCheckType,
                 placeholder: String?,
+                specialChars: [Character]? = nil,
                 checkmark: UIImage?,
                 minLength: Int? = nil,
                 maxLength: Int? = nil) {
         super.init(frame: frame)
         config(checkType: checkType,
                placeholder: placeholder,
+               specialChars: specialChars,
                checkmark: checkmark,
                minLength: minLength,
                maxLength: maxLength)
@@ -75,11 +80,13 @@ open class HCTextField: UITextField {
 
     open func config(checkType: HCTextFieldCheckType,
                      placeholder: String?,
+                     specialChars: [Character]? = nil,
                      checkmark: UIImage?,
                      minLength: Int? = nil,
                      maxLength: Int? = nil) {
 
         self.placeholder = placeholder
+        self.specialChars = specialChars
         self.checkmark = checkmark
         self.checkType = checkType
         self.setBorder(for: .normal)
@@ -109,22 +116,26 @@ open class HCTextField: UITextField {
         } else if checkType.contains(.length) && !satisfiesLengthRequirement(text) {
 
             passedCheck = false
-            setBorder(for: .error)
             textFieldDelegate?.textField(self, didCheckFor: .length, isSuccess: false)
 
         } else if checkType.contains(.notEmpty) && isEmpty(text) {
 
             passedCheck = false
-            setBorder(for: .error)
             textFieldDelegate?.textField(self, didCheckFor: .notEmpty, isSuccess: false)
+
+        } else if checkType.contains(.noSpecialChar) && containsSpecialChars(text) {
+
+            passedCheck = false
+            textFieldDelegate?.textField(self, didCheckFor: .noSpecialChar, isSuccess: false)
 
         } else {
 
             passedCheck = true
-            setBorder(for: .normal)
             textFieldDelegate?.textField(self, didCheckFor: .none, isSuccess: true)
             addCheckmark()
         }
+
+        setBorder(for: passedCheck ? .normal : .error)
 
         return super.resignFirstResponder()
     }
@@ -144,7 +155,7 @@ open class HCTextField: UITextField {
         attrText.append(NSMutableAttributedString(string: "      .",
                                                   attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 2)]))
 
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: frame.size.height - 10))
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: frame.size.height - 10))
         label.textAlignment = .right
         label.textColor = .red
         label.attributedText = attrText
@@ -178,6 +189,17 @@ open class HCTextField: UITextField {
         }
 
         return allCharactersIsSpace ? true : t.isEmpty
+    }
+
+    private func containsSpecialChars(_ text: String?) -> Bool {
+        guard let t = text, let chars = specialChars else { return false }
+
+        var contained = false
+        for c in chars where t.characters.contains(c) {
+            contained = true
+            break
+        }
+        return contained
     }
 
     private func setBorder(for type: HCTextFieldType) {
