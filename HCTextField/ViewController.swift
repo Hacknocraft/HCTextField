@@ -100,7 +100,7 @@ class ViewController: UIViewController, HCTextFieldDelegate {
                 errorMessage = "6~20 characters"
 
             case HCTextFieldCheckType.noSpecialChar:
-                errorMessage = "Cann't contains \"/ & * $\""
+                errorMessage = "Cann't contains speical chars"
             default:
                 break
             }

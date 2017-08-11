@@ -11,6 +11,9 @@ import Foundation
 
 private let kMinLength = 4
 private let kMaxLength = 50
+private let kSpecialChars: [Character] = ["/", "&", "*", "$", " ", "!", "~", "`",
+                                          "@", "#", "%", "^", "|", "\\", ",", ".",
+                                          "?", "<", ">", "{", "}", "[", "]"]
 
 private enum HCTextFieldType {
     case normal
@@ -39,7 +42,7 @@ public struct HCTextFieldCheckType: OptionSet {
     public static let length = HCTextFieldCheckType(rawValue: 1 << 2)
     /// check if input was missing
     public static let notEmpty = HCTextFieldCheckType(rawValue: 1 << 3)
-    /// check if input contains special chars, you need to specify the chars when you init HCTextField
+    /// check if input contains special chars, you can specify the chars when you init HCTextField
     public static let noSpecialChar = HCTextFieldCheckType(rawValue: 1 << 4)
 }
 
@@ -60,7 +63,7 @@ open class HCTextField: UITextField {
     public init(frame: CGRect,
                 checkType: HCTextFieldCheckType,
                 placeholder: String?,
-                specialChars: [Character]? = nil,
+                specialChars: [Character]? = kSpecialChars,
                 checkmark: UIImage?,
                 minLength: Int? = nil,
                 maxLength: Int? = nil) {
@@ -80,7 +83,7 @@ open class HCTextField: UITextField {
 
     open func config(checkType: HCTextFieldCheckType,
                      placeholder: String?,
-                     specialChars: [Character]? = nil,
+                     specialChars: [Character]? = kSpecialChars,
                      checkmark: UIImage?,
                      minLength: Int? = nil,
                      maxLength: Int? = nil) {
@@ -159,6 +162,7 @@ open class HCTextField: UITextField {
         label.textAlignment = .right
         label.textColor = .red
         label.attributedText = attrText
+        label.sizeToFit()
 
         rightView = label
     }
