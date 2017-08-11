@@ -44,7 +44,6 @@ public struct HCTextFieldCheckType: OptionSet {
 open class HCTextField: UITextField {
 
     open var checkType: HCTextFieldCheckType = .notEmpty
-    open var errorMessage: String?
     open var minLength: Int = kMinLength
     open var maxLength: Int = kMaxLength
     open var passedCheck: Bool = false
@@ -57,14 +56,12 @@ open class HCTextField: UITextField {
 
     public init(frame: CGRect,
                 checkType: HCTextFieldCheckType,
-                errorMessage: String?,
                 placeholder: String?,
                 checkmark: UIImage?,
                 minLength: Int? = nil,
                 maxLength: Int? = nil) {
         super.init(frame: frame)
         config(checkType: checkType,
-               errorMessage: errorMessage,
                placeholder: placeholder,
                checkmark: checkmark,
                minLength: minLength,
@@ -77,7 +74,6 @@ open class HCTextField: UITextField {
     }
 
     open func config(checkType: HCTextFieldCheckType,
-                     errorMessage: String?,
                      placeholder: String?,
                      checkmark: UIImage?,
                      minLength: Int? = nil,
@@ -86,7 +82,6 @@ open class HCTextField: UITextField {
         self.placeholder = placeholder
         self.checkmark = checkmark
         self.checkType = checkType
-        self.errorMessage = errorMessage
         self.setBorder(for: .normal)
         self.minLength = minLength ?? kMinLength
         self.maxLength = maxLength ?? kMaxLength
@@ -109,29 +104,52 @@ open class HCTextField: UITextField {
 
             passedCheck = false
             setBorder(for: .error)
-            textFieldDelegate?.textField(self, didCheckFor: .email, isSuccess: false, errorMessage: errorMessage)
+            textFieldDelegate?.textField(self, didCheckFor: .email, isSuccess: false)
 
         } else if checkType.contains(.length) && !satisfiesLengthRequirement(text) {
 
             passedCheck = false
             setBorder(for: .error)
-            textFieldDelegate?.textField(self, didCheckFor: .length, isSuccess: false, errorMessage: errorMessage)
+            textFieldDelegate?.textField(self, didCheckFor: .length, isSuccess: false)
 
         } else if checkType.contains(.notEmpty) && isEmpty(text) {
 
             passedCheck = false
             setBorder(for: .error)
-            textFieldDelegate?.textField(self, didCheckFor: .notEmpty, isSuccess: false, errorMessage: errorMessage)
+            textFieldDelegate?.textField(self, didCheckFor: .notEmpty, isSuccess: false)
 
         } else {
 
             passedCheck = true
             setBorder(for: .normal)
-            textFieldDelegate?.textField(self, didCheckFor: .none, isSuccess: true, errorMessage: nil)
+            textFieldDelegate?.textField(self, didCheckFor: .none, isSuccess: true)
             addCheckmark()
         }
 
         return super.resignFirstResponder()
+    }
+
+    // MARK: - Public API
+
+    open func showErrorMessageOnRightView(_ errorMessage: String?) {
+        guard let message = errorMessage else {
+            rightViewMode = .never
+            return
+        }
+
+        rightViewMode = .unlessEditing
+
+        let attrText = NSMutableAttributedString(string: message,
+                                                 attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 13)])
+        attrText.append(NSMutableAttributedString(string: "      .",
+                                                  attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 2)]))
+
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: frame.size.height - 10))
+        label.textAlignment = .right
+        label.textColor = .red
+        label.attributedText = attrText
+
+        rightView = label
     }
 
     // MARK: - Private implementations
@@ -151,8 +169,15 @@ open class HCTextField: UITextField {
     }
 
     private func isEmpty(_ text: String?) -> Bool {
-        guard let t = text else { return false }
-        return t.isEmpty
+        guard let t = text else { return true }
+
+        var allCharactersIsSpace = true
+        for c in t.characters where c != " " {
+            allCharactersIsSpace = false
+            break
+        }
+
+        return allCharactersIsSpace ? true : t.isEmpty
     }
 
     private func setBorder(for type: HCTextFieldType) {
@@ -214,7 +239,6 @@ public protocol HCTextFieldDelegate: UITextFieldDelegate {
     // Objective-C doesn't support OptionSet
     func textField(_ textField: HCTextField,
                    didCheckFor type: HCTextFieldCheckType,
-                   isSuccess: Bool,
-                   errorMessage: String? )
+                   isSuccess: Bool)
 
 }
