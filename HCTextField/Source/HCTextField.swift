@@ -9,9 +9,9 @@
 import UIKit
 import Foundation
 
-private let kMinLength = 4
-private let kMaxLength = 50
-private let kSpecialChars: [Character] = ["/", "&", "*", "$", " ", "!", "~", "`",
+public let kMinLength = 4
+public let kMaxLength = 50
+public let kSpecialChars: [Character] = ["/", "&", "*", "$", " ", "!", "~", "`",
                                           "@", "#", "%", "^", "|", "\\", ",", ".",
                                           "?", "<", ">", "{", "}", "[", "]"]
 
@@ -153,10 +153,12 @@ open class HCTextField: UITextField {
 
         rightViewMode = .unlessEditing
 
-        let attrText = NSMutableAttributedString(string: message,
-                                                 attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 13)])
-        attrText.append(NSMutableAttributedString(string: "      .",
-                                                  attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 2)]))
+        let attrText =
+            NSMutableAttributedString(string: message,
+                                      attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 13)])
+        attrText
+            .append(NSMutableAttributedString(string: "      .",
+                                              attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 2)]))
 
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: frame.size.height - 10))
         label.textAlignment = .right
@@ -174,7 +176,7 @@ open class HCTextField: UITextField {
 
         let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
-        return emailPredicate.evaluate(with:email)
+        return emailPredicate.evaluate(with: email)
     }
 
     private func satisfiesLengthRequirement(_ text: String?) -> Bool {
